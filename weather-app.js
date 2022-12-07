@@ -10,13 +10,12 @@ var p = new Push({
     user: process.env.USERKEY,
 })
 
-
+//getDay gives day as value from 0 to 6, must convert to english for user
 let weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
+cron.schedule('0 0 8 * * *', getWeather)
 
-// cron.schedule('0 0 8 * * *', getWeather)
-
-getWeather();
+// getWeather();
 
 async function getWeather() {
 
@@ -38,7 +37,7 @@ async function getWeather() {
     let forecast = 'Low of ' + foreData.mintemp_f + '° and a high of ' + foreData.maxtemp_f+'°. Chance of rain is '+foreData.daily_chance_of_rain+'%';
 
     //Options for downloading the weather icon image to the server
-    //Images must be served because pushover-notifications uses fs.readfilesync
+    //Images must be served locally because pushover-notifications uses fs.readfilesync
     let options = {
         url: 'https://'+foreData.condition.icon.substring(2),
         dest: __dirname+'/icons',
@@ -53,10 +52,10 @@ async function getWeather() {
 }
 
 
-function sendMessage(Ctitle, body, filePath){
+function sendMessage(cTitle, body, filePath){
     var msg = {
         message: body,
-        title: Ctitle,
+        title: cTitle,
         sound: 'pianobar',
         priority: 1,
         file: filePath,
